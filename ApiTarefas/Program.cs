@@ -31,6 +31,11 @@ app.MapPost("/tarefas", async (Tarefa tarefa, AppDbContext db) =>
     return Results.Created($"/tarefas/{tarefa.Id}", tarefa);
 });
 
+app.MapGet("/tarefas/{id}", async (int id, AppDbContext db) =>
+    await db.Tarefas.FindAsync(id) is Tarefa tarefa ? Results.Ok(tarefa) : Results.NotFound());
+
+app.MapGet("/tarefas/concluida", async (AppDbContext db) => { return await db.Tarefas.Where(tarefa => tarefa.IsConcluida).ToListAsync(); });
+
 #endregion
 
 app.Run();
